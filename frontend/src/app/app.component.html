@@ -1,0 +1,19 @@
+<div class="root">
+  <h1 class="root__title">MOOD TRACKER 3000</h1>
+  
+  <app-mood-form 
+    (moodSubmitted)="onMoodSubmitted($event)"
+  ></app-mood-form>
+
+  <app-mood-calendar 
+    [moods]="calendarMoods"
+    [year]="calendarYear"
+    [month]="calendarMonth"
+    [totalDays]="calendarTotalDays"
+  ></app-mood-calendar>
+
+  <app-mood-list 
+    [moods]="moods"
+    (refreshRequested)="onRefreshRequested()"
+  ></app-mood-list>
+</div>

@@ -1,0 +1,95 @@
+.mood-form {
+  background: #ffffff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 24px;
+  margin: 20px auto;
+  max-width: 600px;
+}
+
+.mood-form__title {
+  color: #333;
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 20px;
+}
+
+.mood-form__field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.mood-form__label {
+  color: #555;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.mood-form__input {
+  background: #ffffff;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 10px;
+  font-size: 16px;
+  color: #333;
+  transition: border-color 0.2s;
+}
+
+.mood-form__input:focus {
+  outline: none;
+  border-color: #007bff;
+}
+
+.mood-form__select {
+  background: #ffffff;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 10px;
+  font-size: 16px;
+  color: #333;
+  cursor: pointer;
+  transition: border-color 0.2s;
+}
+
+.mood-form__select:focus {
+  outline: none;
+  border-color: #007bff;
+}
+
+.mood-form__textarea {
+  background: #ffffff;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 10px;
+  font-size: 16px;
+  color: #333;
+  min-height: 100px;
+  resize: vertical;
+  transition: border-color 0.2s;
+}
+
+.mood-form__textarea:focus {
+  outline: none;
+  border-color: #007bff;
+}
+
+.mood-form__button {
+  padding: 12px 24px;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.mood-form__button--primary {
+  background-color: #007bff;
+  color: #ffffff;
+}
+
+.mood-form__button--primary:hover {
+  opacity: 0.9;
+}

@@ -1,0 +1,43 @@
+<div class="mood-form">
+  <h3 class="mood-form__title">Agregar Mood</h3>
+  
+  <div class="mood-form__field">
+    <label class="mood-form__label" for="moodInput">Estado de ánimo</label>
+    <input 
+      #moodInput
+      type="text" 
+      id="moodInput"
+      placeholder="Como te sientes?" 
+      class="mood-form__input"
+    >
+  </div>
+  
+  <div class="mood-form__field">
+    <label class="mood-form__label" for="categoryInput">Categoría</label>
+    <select 
+      #categoryInput
+      id="categoryInput"
+      class="mood-form__select"
+    >
+      <option value="">-- Selecciona Categoría --</option>
+      <option *ngFor="let cat of categories" [value]="cat">{{cat}}</option>
+    </select>
+  </div>
+  
+  <div class="mood-form__field">
+    <label class="mood-form__label" for="noteInput">Notas</label>
+    <textarea 
+      #noteInput
+      id="noteInput"
+      placeholder="Notas..." 
+      class="mood-form__textarea"
+    ></textarea>
+  </div>
+  
+  <button 
+    (click)="onSubmit(moodInput.value, noteInput.value, categoryInput.value)"
+    class="mood-form__button mood-form__button--primary"
+  >
+    GUARDAR MOOD!
+  </button>
+</div>

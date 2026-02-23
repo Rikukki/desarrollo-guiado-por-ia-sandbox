@@ -1,94 +1,79 @@
-import { Component } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { CommonModule } from '@angular/common';
+import { Component, OnInit } from '@angular/core';
+
+import { MoodService } from './services/mood.service';
+import { MoodFormComponent } from './components/mood-form/mood-form.component';
+import { MoodListComponent } from './components/mood-list/mood-list.component';
+import { MoodCalendarComponent } from './components/mood-calendar/mood-calendar.component';
+import { MoodEntry, MoodCreateRequest } from './models/mood.model';
+
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule],
-  template: `
-    <div style="background-color: #ff00ff; padding: 20px; border: 5px solid red;">
-      <h1 style="color: yellow; text-shadow: 2px 2px red; font-family: Comic Sans MS;">MOOD TRACKER 3000</h1>
-      
-      <div style="background: cyan; border: 3px dashed lime; padding: 10px; margin: 10px;">
-        <h3 style="color: red;">Agregar Mood</h3>
-        <input 
-          #moodInput
-          type="text" 
-          placeholder="Como te sientes?" 
-          style="background: yellow; border: 2px solid red; color: blue; font-size: 20px;"
-        >
-        <br><br>
-        <textarea 
-          #noteInput
-          placeholder="Notas..." 
-          style="background: lime; border: 2px solid purple; width: 300px; height: 100px;"
-        ></textarea>
-        <br><br>
-        <button 
-          (click)="addMood(moodInput.value, noteInput.value)"
-          style="background: orange; color: white; border: 4px solid black; padding: 15px; font-weight: bold;"
-        >
-          GUARDAR MOOD!
-        </button>
-      </div>
-
-      <div style="background: yellow; border: 5px solid blue; padding: 15px; margin-top: 20px;">
-        <h2 style="color: red; text-decoration: underline;">Historial de Moods</h2>
-        <button 
-          (click)="loadMoods()"
-          style="background: red; color: yellow; border: 3px solid green; margin-bottom: 10px;"
-        >
-          ACTUALIZAR LISTA
-        </button>
-        
-        <div *ngFor="let item of moods" style="background: pink; border: 2px solid green; margin: 5px; padding: 10px;">
-          <p style="color: blue; font-size: 18px;"><strong>Mood:</strong> {{item.mood}}</p>
-          <p style="color: purple;"><strong>Nota:</strong> {{item.note}}</p>
-          <p style="color: orange; font-size: 12px;">{{item.date_formatted}} - {{item.day_of_week}}</p>
-        </div>
-      </div>
-    </div>
-  `,
-  styles: [``]
+  imports: [MoodFormComponent, MoodListComponent, MoodCalendarComponent],
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.css']
 })
-export class AppComponent {
-  moods: any = [];
-  private apiUrl = 'http://localhost:8000';
+export class AppComponent implements OnInit {
+  moods: MoodEntry[] = [];
+  calendarMoods: MoodEntry[] = [];
+  calendarYear: number = new Date().getFullYear();
+  calendarMonth: number = new Date().getMonth() + 1;
+  calendarTotalDays: number = 0;
 
-  constructor(private http: HttpClient) {}
+  constructor(private moodService: MoodService) {}
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.loadMoods();
+    this.loadCalendar();
   }
 
-  addMood(mood: any, note: any) {
-    const data: any = {
-      mood: mood,
-      note: note
-    };
-    
-    this.http.post(`${this.apiUrl}/add`, data).subscribe({
-      next: (response: any) => {
-        console.log('Guardado:', response);
+  onMoodSubmitted(request: MoodCreateRequest): void {
+    this.moodService.addMood(request).subscribe({
+      next: (entry: MoodEntry) => {
+        console.log('Mood guardado:', entry);
         this.loadMoods();
+        this.loadCalendar();
       },
-      error: (err: any) => {
-        console.error('Error:', err);
+      error: (error: unknown) => {
+        console.error('Error al guardar mood:', error);
         alert('ERROR AL GUARDAR!');
       }
     });
   }
 
-  loadMoods() {
-    this.http.get(`${this.apiUrl}/list`).subscribe({
-      next: (response: any) => {
-        this.moods = response.moods || [];
+  onRefreshRequested(): void {
+    this.loadMoods();
+  }
+
+  private loadMoods(): void {
+    this.moodService.listMoods().subscribe({
+      next: (moods: MoodEntry[]) => {
+        this.moods = moods;
         console.log('Moods cargados:', this.moods);
       },
-      error: (err: any) => {
-        console.error('Error cargando:', err);
+      error: (error: unknown) => {
+        console.error('Error al cargar moods:', error);
         this.moods = [];
+      }
+    });
+  }
+
+  private loadCalendar(): void {
+    this.moodService.getCalendar(this.calendarYear, this.calendarMonth).subscribe({
+      next: (response) => {
+        this.calendarTotalDays = response.total_days;
+        const moodsList: MoodEntry[] = [];
+        Object.values(response.days).forEach(moods => {
+          moodsList.push(...moods);
+        });
+        this.calendarMoods = moodsList;
+        console.log('Calendario cargado:', response);
+      },
+      error: (error: unknown) => {
+        console.error('Error al cargar calendario:', error);
+        this.calendarMoods = [];
+        this.calendarTotalDays = 0;
       }
     });
   }

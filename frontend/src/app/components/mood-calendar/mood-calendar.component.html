@@ -1,0 +1,27 @@
+<div class="mood-calendar">
+  <div class="mood-calendar__header">
+    <h3 class="mood-calendar__title">{{ monthName }} {{ year }}</h3>
+  </div>
+
+  <div class="mood-calendar__weekdays">
+    <span class="mood-calendar__weekday" *ngFor="let day of daysOfWeek">
+      {{ day }}
+    </span>
+  </div>
+
+  <div class="mood-calendar__grid">
+    <div class="mood-calendar__week" *ngFor="let week of calendarWeeks">
+      <div [ngClass]="getDayClasses(day)" *ngFor="let day of week">
+        <span class="mood-calendar__day-number" *ngIf="day.isCurrentMonth">
+          {{ day.day }}
+        </span>
+        <span class="mood-calendar__day-number mood-calendar__day-number--outside" *ngIf="!day.isCurrentMonth">
+          {{ day.day }}
+        </span>
+        <span class="mood-calendar__day-mood" *ngIf="getDisplayMood(day)">
+          {{ getDisplayMood(day) }}
+        </span>
+      </div>
+    </div>
+  </div>
+</div>

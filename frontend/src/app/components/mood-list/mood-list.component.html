@@ -1,0 +1,19 @@
+<div class="mood-list">
+  <div class="mood-list__header">
+    <h2 class="mood-list__title">Historial de Moods</h2>
+    
+    <button 
+      (click)="onRefresh()"
+      class="mood-list__refresh-button"
+    >
+      ACTUALIZAR LISTA
+    </button>
+  </div>
+  
+  <div *ngFor="let item of moods" class="mood-list__item">
+    <p class="mood-list__mood"><strong>Mood:</strong> {{item.mood}}</p>
+    <p class="mood-list__category"><strong>Categoría:</strong> {{item.category}}</p>
+    <p class="mood-list__note"><strong>Nota:</strong> {{item.note}}</p>
+    <p class="mood-list__date">{{item.date_formatted}} - {{item.day_of_week}}</p>
+  </div>
+</div>
